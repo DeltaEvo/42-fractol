@@ -1,0 +1,1 @@
+SRCS += src/fractol.c
