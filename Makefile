@@ -6,7 +6,7 @@
 #    By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/06 16:01:17 by dde-jesu          #+#    #+#              #
-#    Updated: 2018/12/18 10:12:32 by dde-jesu         ###   ########.fr        #
+#    Updated: 2018/12/20 11:36:55 by dde-jesu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ $(OBJS): Makefile src.mk
 
 $(NAME): $(OBJS)
 	$(MAKE) -C libft libft.a
-	$(CC) -lmlx -framework OpenGL -framework AppKit -o $(NAME) $(OBJS) libft/libft.a
+	$(CC) -lmlx -lpthread -lm -framework OpenGL -framework AppKit -o $(NAME) $(OBJS) libft/libft.a
 #	$(CC) $(CFLAGS) -L../minilibx -o $(NAME) $(OBJS) libft/libft.a -lmlx $(shell pkg-config --libs x11) $(shell pkg-config --libs xext) -lm
 
 clean:
