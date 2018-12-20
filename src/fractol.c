@@ -6,13 +6,15 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/18 09:13:46 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/20 11:48:44 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/20 12:15:31 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 #include "ft/mlx.h"
+#include "ft/str.h"
 #include <stdlib.h>
+#include <unistd.h>
 
 static int	mouse_hook(int button, int x, int y, t_fractol *fractol)
 {
@@ -76,7 +78,7 @@ static int	key_hook(int key, t_fractol *fractol)
 	return (render(fractol));
 }
 
-static int	mouse_move_hook(int x, int y, t_fractol *fractol)
+static int	mousem_hook(int x, int y, t_fractol *fractol)
 {
 	if (x > 0 && x < WIDTH && y > 0 && y < HEIGHT)
 	{
@@ -87,26 +89,33 @@ static int	mouse_move_hook(int x, int y, t_fractol *fractol)
 		return (0);
 }
 
-int			main(void)
-{
-	t_fractol	fractol;
-	int			u;
+#define USAGE "Usage: fractol [mandelbrot|julia|leaf|feigen|ship]\n"
 
-	fractol.current = g_fractals;
-	fractol.c = 0.285 + 0.013 * I;
-	fractol.max_iter = 101;
-	fractol.scale = 0.25;
-	fractol.x = 0;
-	fractol.y = 0;
-	fractol.mlx = mlx_init();
-	fractol.win = mlx_new_window(fractol.mlx, WIDTH, HEIGHT + INFO_HEIGHT,
-			"Fract'ol");
-	fractol.ximg = mlx_new_image(fractol.mlx, WIDTH, HEIGHT);
-	fractol.img = (int *)mlx_get_data_addr(fractol.ximg, &u, &u, &u);
-	mlx_expose_hook(fractol.win, render, &fractol);
-	mlx_mouse_hook(fractol.win, mouse_hook, &fractol);
-	mlx_hook(fractol.win, X_KEYPRESS, X_KEYPRESSMASK, key_hook, &fractol);
-	mlx_hook(fractol.win, X_MOTIONNOTIFY, X_POINTERMOTIONMASK, mouse_move_hook,
-			&fractol);
-	mlx_loop(fractol.mlx);
+int			main(int ac, char *av[])
+{
+	t_fractol	self;
+	int			i;
+
+	self.current = NULL;
+	i = 0;
+	if (ac == 2)
+		while (i < 5)
+			if (ft_strcmp(g_fractals[i++].name, av[1]) == 0)
+			{
+				self.current = g_fractals + i - 1;
+				break ;
+			}
+	if (!self.current)
+		return (write(2, USAGE, sizeof(USAGE) - 1) & 0 + 1);
+	self = (t_fractol) { .current = self.current, .mlx = mlx_init(),
+		.c = 0.285 + 0.013 * I, .max_iter = 101, .scale = 0.25, .x = 0, .y = 0
+	};
+	self.win = mlx_new_window(self.mlx, WIDTH, HEIGHT + INFO_HEIGHT, "Fractol");
+	self.ximg = mlx_new_image(self.mlx, WIDTH, HEIGHT);
+	self.img = (int *)mlx_get_data_addr(self.ximg, &i, &i, &i);
+	mlx_expose_hook(self.win, render, &self);
+	mlx_mouse_hook(self.win, mouse_hook, &self);
+	mlx_hook(self.win, X_KEYPRESS, X_KEYPRESSMASK, key_hook, &self);
+	mlx_hook(self.win, X_MOTIONNOTIFY, X_POINTERMOTIONMASK, mousem_hook, &self);
+	mlx_loop(self.mlx);
 }
