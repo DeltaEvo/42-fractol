@@ -6,7 +6,7 @@
 /*   By: dde-jesu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/20 10:42:48 by dde-jesu          #+#    #+#             */
-/*   Updated: 2018/12/20 11:47:21 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2018/12/20 12:20:37 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ static int	infos(t_fractol *fractol)
 {
 	t_int_str	str;
 
-	mlx_pixel_put(fractol->mlx, fractol->win, WIDTH / 2, HEIGHT / 2, 0xFF0000);
 	mlx_string_put(fractol->mlx, fractol->win, 5, HEIGHT, MCOL, "Iterations:");
 	str = ft_uint_to_str(fractol->max_iter);
 	mlx_string_put(fractol->mlx, fractol->win, 120, HEIGHT, MCOL, str.str);
